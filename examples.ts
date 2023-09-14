@@ -83,38 +83,6 @@ const searcTalukas = (data: { ":state": string; ":district": string }) => {
 
 const selected = pop(farmerBase.slice(), ":farmer/farms", ":farmer/mobile");
 
-// console.log("farmers by data", farmersByData(), "\n");
-
-// console.log("farmers by selected data", farmersByData(selected), "\n");
-
-// console.log("farmers by id", farmerById("88848saca"), "\n");
-
-// console.log(
-//   "PUSH farmer",
-//   pushFarmer({
-//     ":farmer/id": undefined,
-//     ":farmer/name": undefined,
-//     ":farmer/nickname": undefined,
-//     ":farmer/mobile": undefined,
-//     ":farmer/lang": undefined,
-//     ":farmer/farms": [
-//       { ":farm/name": "hello", ":farm/acre": 88 },
-//       { ":farm/name": "hello", ":farm/acre": 88 },
-//     ],
-//     ":farmer/state": undefined,
-//     ":farmer/district": undefined,
-//     ":farmer/sub-districts": undefined,
-//     ":farmer/taluka": undefined,
-//     ":farmer/village": undefined,
-//     ":farmer/favourite-crops": undefined,
-//   })
-// );
-
-// console.log(
-//   "search talukas",
-//   searcTalukas({ ":state": "gujarat", ":district": "botad" })
-// );
-
 const kmReq = async (token: string, ...query: Query[]) => {
   const resp = await fetch(`${process.env("KM_URI")}/pathom-json`, {
     method: "POST",

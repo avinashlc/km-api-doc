@@ -139,3 +139,130 @@ const farmerById = '{:query [{[:farmer/id "1"] [:farmer/id :farmer/mobile]}]}';
 ```
 
 - Reference: [Multiple inputs `docs`](https://blog.wsscode.com/pathom/v2/pathom/2.2.0/connect/resolvers.html#_multiple_inputs)
+
+### Dealer
+
+> Resolver
+
+```clojure
+    1. [:retailers]
+    2. [{:retailers {:retailer/id [:retailer/id :retailer/name]}}]
+    3. [{[:retalerr/id "1"] [:retalerr/id :retalerr/mobile]}]
+    4. All allowed keys for the retailer resolver
+        [:retailer/id
+         :retailer/firstname
+         :retailer/mobile
+         :retailer/company-name
+         :retailer/state
+         :retailer/district
+         :retailer/taluka
+         :retailer/village
+         :retailer/stats
+         :retailer/pincode
+         :retailer/products
+         :retailer/location
+         :retailer/fetilizers-retail-license
+         :retailer/fetilizers-wholesale-license
+         :retailer/pesticides-license
+         :retailer/seeds-license
+         :retailer/credit-account
+         :retailer/booked-credits
+         :retailer/contacts => can be sub queried. checks [contacts] docs
+         :retailer/address
+         :retailer/gst-no]
+```
+
+> Mutation
+
+```clojure
+    1. [(retailer/push {:retailer/name "one", :retailer/mobile "111", `... all allowed keys`})]
+        => create new retailer
+        => updates an existing retailer if :retailer/id is passed within the data
+        => returns created/updated :retailer/id on successful mutation
+
+    2. Example:
+        [(retailer/push {:retailer/name "one",
+                         :retailer/mobile "111"
+                         :retailer/lang "en"
+                         :retailer/state "Gujarat"
+                         :retailer/district "botad"
+                         :retailer/taluka  "taluka"
+                         :retailer/fetilizers-retail-license "#inst time"
+                         :retailer/fetilizers-wholesale-license "#inst time"
+                         :retailer/pesticides-license "#inst time"
+                         :retailer/seeds-license "#inst time"
+                         :retailer/contacts [{:contact/id "asaa"} {:contact/id "asasa"}]
+                         :retailer/gst-no "amfcinw448"]
+                       })]
+```
+
+NOTE: refer [contacts] docs for more info about retailer/contacts
+
+> REST
+
+```clojure
+    1. "/import-multiple/retailer"
+        => POST request
+        => Request Body => {"data-file" : excel-file}
+        => imports a list of retailers from the excel file to the database
+        => NOTE: Not a part of pathom request
+    2. "/export-multiple/retailer"
+        => GET request
+        => exports a base excel sheet with column names prefilled for the client to download and add retailers
+        => NOTE: Not a part of pathom request
+```
+
+### contact
+
+> Resolvers
+
+```clojure
+    1. [{:retailer/contacts {:contact/id [:contact/id :contact/name]}}]
+    2. [{[:contact/id "1"] [:contact/id :contact/mobile]}]
+    2. All allowed keys for the contact resolver
+        [:contact/id
+         :contact/firstname
+         :contact/lastname
+         :contact/name
+         :contact/adrs.street-address
+         :contact/adrs.lvl1
+         :contact/adrs.lvl2
+         :contact/adrs.lvl3
+         :contact/adrs.lvl4
+         :contact/adrs.lvl5
+         :contact/adrs.country
+         :contact/adrs.pincode
+         :contact/emails
+         :contact/phone-numbers]
+```
+
+> Mutation
+
+```clojure
+    1. [(contact/push {:contact/name "one", :contact/phone-numbers ["111" "8484"], `... all allowed keys`})]
+        => create new contact
+        => updates an existing contact if :contact/id is passed within the data
+        => returns created/updated :contact/id on successful mutation
+
+    2. [(contact/push-many {:contacts [{:contact/name "one" :contact/phone-numbers ["111" "8484"]}
+                                       {:contact/name "one" :contact/phone-numbers ["111" "8484"]}]})]
+        => Same as contact/push but multiple contacts can be pushed
+```
+
+### Auth
+
+> REST
+
+```clojure
+    1. "/login"
+        => POST request
+        => Request Body =>  {"grant_type" : "password",
+                             "scope" : "openid"
+                             "username" : {{username}}
+                             "password": {{password}}}
+        => imports a list of farmers from the excel file to the database
+    2. "/token-refresh"
+        => POST request
+        => params: {"grant_type" : "refresh_token",
+                    "refresh_token" : {{RF_TOKEN}}}
+```
