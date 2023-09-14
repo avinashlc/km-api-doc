@@ -51,7 +51,7 @@ If you are unfamiliar with pathom in general see [pathom's `docs`](https://blog.
 
     4. [{[:farmer/location {:state "a" :district "b" :taluka "c" :village "d" :crop "e"}]
          [:filtered-farmers]}]
-          => search farmer by location
+          => search farmer
           => returns an array of objects with farmer.id on each object
           => [{"farmer.id": "1"}, {"farmer.id": "2"}]
 
@@ -247,6 +247,121 @@ NOTE: refer [contacts] docs for more info about retailer/contacts
     2. [(contact/push-many {:contacts [{:contact/name "one" :contact/phone-numbers ["111" "8484"]}
                                        {:contact/name "one" :contact/phone-numbers ["111" "8484"]}]})]
         => Same as contact/push but multiple contacts can be pushed
+```
+
+### Broadcast
+
+> Resolvers
+
+```clojure
+    1. [:broadcasts]
+
+    2. [{:broadcasts {:broadcast/id [:broadcast/name]}}]
+
+    3. [{[:broadcast/id "1"] [:broadcast/id :broadcast/name]}]
+
+    4. All allowed keys for the broadcast resolver
+       [:broadcast/id
+        :broadcast/name
+        :broadcast/status
+        :broadcast/scheduled-at
+        :broadcast/audience
+        :broadcast/company
+        :broadcast/template
+        :broadcast/state
+        :broadcast/district
+        :broadcast/village
+        :broadcast/taluka
+        :broadcast/sent
+        :broadcast/read
+        :broadcast/delivered]
+
+    5. [{'([:broadcast/state "a"]
+            {:pathom/context {:broadcast/district "b"
+                              :broadcast/taluka "c"
+                              :broadcast/village "d"
+                               :broadcast/crop "e"}})
+          [:filtered-broadcasts]}]
+        => returns filtered broadcasts
+
+    6. [:client/usage-info]
+        => returns clients billing details
+
+    7. [:combined-templates]
+        => returns an array of objects with each object containing a single key :template/name
+        => In this case the :template/name acts as the identifier
+
+    8. [{:combined-templates {:template/name [:template/languages]}}]
+
+    9. All allowed keys for the template resolver
+        [:template/name
+         :template/components
+         :template/languages
+         :template/status
+         :template/category
+         :template/params
+         :template-broadcasts => returns an array of objects with :broadcast/id]
+    10. [{'([:target-audience `either :farmer or :retailer`]
+                {:pathom/context {:state "a"
+                                  :district "b"
+                                  :taluka "c"
+                                  :village "d"
+                                  :crop "e"}})
+          [:realized-audience-count]}]
+          => returns the numbers of users found for the query
+```
+
+> Mutations
+
+```clojure
+   1. [(broadcast/push {:broadcast/id "asas"
+                        :broadcast/name "asas"
+                        :broadcast/scheduled-at "#inst time"
+                        :broadcast/audience {:target-audience :farmer or :retailer
+                                             :state ""
+                                             :district ""
+                                             :taluka ""
+                                             :village ""}
+                        :broadcast/template {:name ""
+                                             :languages [:en :gu]
+                                             :variables {:body {:1 {:value {:resolve :farmer/name}}},
+                                                         :header {:image {:value {:resolve :uploaded-image,
+                                                         :supply [:media/id]},
+                                                         :slot {:media/id "8e893468"}}}}}
+                        })] => check an example template below
+
+    2. example template
+    #:template{
+     :name "test_1"
+     :languages [:en :gu]
+     :components
+        [{:image {:en nil
+                  :gu nil}
+          :type  "HEADER"}
+         {:text {:en " Hello {{1}}, Welcome to the KrishiMandir's WhatsApp Information Services. Now you can contact our Agri Expert for information regarding Original Seeds of Castor, Sesame and others {{2}}. Would you like to get more information regarding this ?"
+                :gu "નમસ્તે {{1}}, કૃષિ મંદિરની વોટ્સએપ માહિતી સેવામાં આપનું સ્વાગત છે. હવે તમે એરંડા, તલ તથા અન્ય પાકોના ઓરીજનલ બિયારણની માહિતી માટે અમારા કૃષિ નિષ્ણાતનો સીધો સંપર્ક કરી શકો છો. {{2}} શું આ વિશે તમે વધુ માહિતી મેળવવા માંગો છો?"}
+          :type "BODY"}
+         {:text {:en "Powered by KrishiMandir"
+                 :gu "Powered by KrishiMandir"}
+          :type "FOOTER"}
+         {:text {:en "Yes"
+                 :gu "હા"}
+          :type "BUTTONS"}]
+          :category :marketing
+          :params {:header {:image #:var{:opts [:media/id]
+                                         :type :static
+                                         :slot :media/id
+                                         :depends-on []}}
+                            :body   {1 #:var{:opts       [:farmer/name]
+                                          :type       :dynamic
+                                          :slot       :farmer/id
+                                          :depends-on []}
+                                     2 #:var{:opts       [:employee/contact-details]
+                                          :type       :dynamic
+                                          :slot       :employee/id
+                                          :depends-on []}}}
+           :status      :approved
+           :company     "238b-44dc-bede-e2486ebb0666"}
 ```
 
 ### Auth
