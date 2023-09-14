@@ -62,7 +62,6 @@ If you are unfamiliar with pathom in general see [pathom's `docs`](https://blog.
          :farmer/mobile => string
          :farmer/lang => string/keyword
          :farmer/farms => array
-         :farmer/plantations => array
          :farmer/state => string
          :farmer/district => string
          :farmer/sub-districts => string
@@ -79,6 +78,17 @@ If you are unfamiliar with pathom in general see [pathom's `docs`](https://blog.
         => updates an existing farmer if :farmer/id is passed within the data
         => returns created/updated :farmer/id on successful mutation
 
+    2. Example:
+        [(farmer/push {:farmer/name "one",
+                       :farmer/mobile "111"
+                       :farmer/lang "en"
+                       :farmer/state "Gujarat"
+                       :farmer/district "botad"
+                       :farmer/taluka  "taluka"
+                       :farmer/favourite-crops ["Apple"]
+                       :farmer/farms [{:farm/name "one" :farm/acres 55}]
+                       })]
+
 ```
 
 > REST
@@ -93,4 +103,37 @@ If you are unfamiliar with pathom in general see [pathom's `docs`](https://blog.
         => GET request
         => exports a base excel sheet with column names prefilled for the client to download and add farmers
         => NOTE: Not a part of pathom request
+```
+
+> In JavaScript Ecosystem
+
+```javascript
+const allFarmerIDs = "{:query [:farmers]}";
+const allFarmerData = "{:query [{:farmers {:farmer/id [:farmer/name]}}]}";
+const farmerById = '{:query [{[:farmer/id "1"] [:farmer/id :farmer/mobile]}]}';
+```
+
+### location
+
+> Resolvers
+
+```clojure
+    1. [:states]
+        => all state names
+        => ["ASSAM", "KERALA"]
+
+    2. [{[:state "Gujarat"] [:districts]}]
+        => all district names by state
+
+    3. [{([:state "Gujarat"] {:pathom/context {:district "botad"}}) [:talukas]}]
+        => all talukas names for given district and state
+        => NOTE: To pass multiple values as arguments to a query, it needs to be constructed using :pathom/context.
+                 It will join whatever is passed to it's map and make it into a single map.
+                 Here, the query can be reasoned about like,
+                      take {:state "gujarat", :district "botad"} => return [:talukas] for it
+
+    4. [{([:state "Gujarat"] {:pathom/context {:district "botad" :taluka "taluka"}}) [:villages]}]
+        => all villages names for given taluka, district and state
+        => NOTE: same logic applies as before
+
 ```
