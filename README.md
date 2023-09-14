@@ -56,7 +56,7 @@ If you are unfamiliar with pathom in general see [pathom's `docs`](https://blog.
           => [{"farmer.id": "1"}, {"farmer.id": "2"}]
 
     5. All allowed keys for the farmer resolver
-        [:farmer/id => string/uuid
+          [:farmer/id => string/uuid
          :farmer/name => string
          :farmer/nickname => string
          :farmer/mobile => string
@@ -137,3 +137,5 @@ const farmerById = '{:query [{[:farmer/id "1"] [:farmer/id :farmer/mobile]}]}';
         => NOTE: same logic applies as before
 
 ```
+
+- Reference: [Multiple inputs `docs`](https://blog.wsscode.com/pathom/v2/pathom/2.2.0/connect/resolvers.html#_multiple_inputs)
