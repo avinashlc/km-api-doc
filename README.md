@@ -11,7 +11,14 @@ If you are unfamiliar with pathom in general see [pathom's `docs`](https://blog.
 ### General
 
 - Query structure: `{:query [q1 q2 ...]}`
-- All API will be processed by a single `POST` request endpoint: `"/pathom"`
+- All API will be processed by a single `POST` request endpoint: `"/pathom-json"`
+- the `"/pathom-json"` request `header` should always contain keys
+
+  ```javascript
+  {"Authentication" : "Bearer {{TOKEN}}",
+   "Content-Type"   : "application/edn" };
+  ```
+
 - Resolvers: Used to retrieve value from the backend. kind of like `GET` request
 
   ```clojure
@@ -247,6 +254,15 @@ NOTE: refer [contacts] docs for more info about retailer/contacts
     2. [(contact/push-many {:contacts [{:contact/name "one" :contact/phone-numbers ["111" "8484"]}
                                        {:contact/name "one" :contact/phone-numbers ["111" "8484"]}]})]
         => Same as contact/push but multiple contacts can be pushed
+```
+
+### Client Usage
+
+> Resolver
+
+```clojure
+1. [:client/usage-info]
+   => returns clients billing details
 ```
 
 ### Broadcast
