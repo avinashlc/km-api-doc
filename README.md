@@ -2,7 +2,7 @@
 
 A guide to make use of krishimandir's pathom-json api
 
-#### NOTE
+> NOTE
 
 If you are unfamiliar with pathom in general see [pathom's `docs`](https://blog.wsscode.com/pathom/v2/pathom/2.2.0/introduction.html) for more information on eql queries.
 
@@ -62,7 +62,13 @@ If you are unfamiliar with pathom in general see [pathom's `docs`](https://blog.
           => returns an array of objects with farmer.id on each object
           => [{"farmer.id": "1"}, {"farmer.id": "2"}]
 
-    5. All allowed keys for the farmer resolver
+    5. [{[:farmer/location {:states ["a"] :districts ["b"] :talukas ["c"] :villages ["d"] :crop ["e"]}]
+         [:multi-search/farmers]}]
+          => search farmer by multiple location input
+          => returns an array of objects with farmer.id on each object
+          => [{"farmer.id": "1"}, {"farmer.id": "2"}]
+
+    6. All allowed keys for the farmer resolver
           [:farmer/id => string/uuid
          :farmer/name => string
          :farmer/nickname => string
