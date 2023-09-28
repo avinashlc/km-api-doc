@@ -62,7 +62,7 @@ If you are unfamiliar with pathom in general see [pathom's `docs`](https://blog.
           => returns an array of objects with farmer.id on each object
           => [{"farmer.id": "1"}, {"farmer.id": "2"}]
 
-    5. [{[:farmer/location {:states ["a"] :districts ["b"] :talukas ["c"] :villages ["d"] :crop ["e"]}]
+    5. [{[:farmer/location {:states ["a"] :districts ["b"] :talukas ["c"] :villages ["d"] :crops ["e"]}]
          [:multi-search/farmers]}]
           => search farmer by multiple location input
           => returns an array of objects with farmer.id on each object
